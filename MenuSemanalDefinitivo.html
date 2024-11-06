@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planificador de Menú Semanal Saludable</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .celda-comida, .celda-cena { width: 40%; }
+    .celda-desayuno { width: 20%; }
+  </style>
+</head>
+<body class="bg-green-50 font-sans min-h-screen flex flex-col items-center">
+  <h1 class="text-4xl font-bold my-5 text-green-800">Planificador de Menú Semanal 🍲</h1>
+
+  <div class="w-full max-w-4xl mb-6">
+    <table class="table-fixed w-full border-collapse">
+      <thead>
+        <tr>
+          <th class="border p-2 bg-green-200">Día</th>
+          <th class="border p-2 bg-green-200">Desayuno</th>
+          <th class="border p-2 bg-green-200">Comida</th>
+          <th class="border p-2 bg-green-200">Cena</th>
+        </tr>
+      </thead>
+      <tbody>
+        <script>
+          const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+          diasSemana.forEach(dia => {
+            document.write(`
+              <tr>
+                <td class="border p-2 bg-green-100 font-semibold">${dia}</td>
+                <td class="border p-2 celda-desayuno"><input type="text" placeholder="Desayuno" class="p-1 w-full border rounded"></td>
+                <td class="border p-2 celda-comida">
+                  <textarea name="comida" rows="5" cols="2" class="mt-2 w-full border rounded"></textarea>
+                </td>
+                <td class="border p-2 celda-cena">
+                  <textarea name="cena" rows="5" cols="2" class="mt-2 w-full border rounded"></textarea>
+                </td>
+              </tr>
+            `);
+          });
+        </script>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flex gap-4 mb-6">
+    <button onclick="generarSugerencias()" class="px-4 py-2 bg-blue-500 text-white rounded">Generar Sugerencias 🍽️</button>
+    <button onclick="generarListaCompra()" class="px-4 py-2 bg-yellow-500 text-white rounded">Generar Lista de la Compra 🛒</button>
+    <button onclick="imprimir()" class="px-4 py-2 bg-gray-500 text-white rounded">Imprimir Menú y Lista 🖨️</button>
+    <button onclick="limpiarTabla()" class="px-4 py-2 bg-red-500 text-white rounded">Limpiar Tabla 🧹</button>
+  </div>
+
+  <h2 class="text-2xl font-semibold text-green-700 mb-4">Lista de la Compra 🛒</h2>
+  <textarea id="listaCompra" rows="35" class="w-full max-w-4xl border rounded p-2 mb-6 h-full" placeholder="Genera aquí tu lista de la compra..."></textarea>
+
+  <script>
+
+    const sugerenciasDesayuno = [
+      "Yogur con frutas", "Tostadas integrales con aguacate", "Avena con plátano y nueces",
+      "Tortilla de espinacas", "Smoothie de frutas", "Pan integral con queso fresco", "Frutas con miel y nueces"
+    ];
+    
+    const sugerenciasComidaCena = [
+      ["Sopa de verduras", "Pechuga de pollo a la plancha"],
+      ["Crema de calabacín", "Merluza a la plancha"],
+      ["Ensalada de quinoa", "Ternera a la plancha"],
+      ["Verduras al vapor", "Tofu salteado"],
+      ["Sopa de miso", "Salmón al horno"],
+      ["Lentejas guisadas", "Filete de pavo al horno"],
+      ["Pimientos rellenos", "Gambas al ajillo"]
+    ];
+
+    function generarSugerencias() {
+      document.querySelectorAll("tbody tr").forEach((fila, i) => {
+        if (i < 7) {
+          const desayuno = sugerenciasDesayuno[Math.floor(Math.random() * sugerenciasDesayuno.length)];
+          fila.querySelector(".celda-desayuno input").value = desayuno;
+
+          const comida = sugerenciasComidaCena[Math.floor(Math.random() * sugerenciasComidaCena.length)];
+          const comidaFormatted = comida[0] + "\n" + comida[1]
+          fila.querySelector(".celda-comida > textarea").value = comidaFormatted;
+
+          const cena = sugerenciasComidaCena[Math.floor(Math.random() * sugerenciasComidaCena.length)];
+          const cenaFormatted = cena[0] + "\n" + cena[1]
+          fila.querySelector(".celda-cena > textarea").value = cenaFormatted;
+        }
+      });
+    }
+
+    function generarListaCompra() {
+      let lista = "";
+      document.querySelectorAll(".celda-desayuno input, .celda-comida textarea, .celda-cena textarea").forEach(input => {
+        if (input.value) lista += "- " + input.value + "\n";
+      });
+      document.getElementById("listaCompra").value = lista;
+    }
+
+    function imprimir() {
+      window.print();
+    }
+
+    function limpiarTabla() {
+      document.querySelectorAll("textarea").forEach(textarea => textarea.value = "");
+      document.querySelectorAll("input").forEach(input => input.value = "");
+      document.getElementById("listaCompra").value = "";
+    }
+  </script>
+</body>
+</html>
